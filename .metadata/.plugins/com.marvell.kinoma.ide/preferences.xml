@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Preferences>
+   <AndroidExportSettings>
+      <Settings id="digital-light-websockets-client/digitallightwebsocketsclient.example.kinoma.marvell.com">
+         <Destination path="C:/Users/TM/Desktop/Kinoma/Google Chrome.apk"></Destination>
+         <PackageContents>
+            <ResourceList>
+               <Resource path="application.xml" enabled="true"></Resource>
+               <Resource path="iPhone-Icon1.png" enabled="false"></Resource>
+               <Resource path="src/assets/led_off.png" enabled="true"></Resource>
+               <Resource path="src/assets/led_on.png" enabled="true"></Resource>
+               <Resource path="src/main.xml" enabled="true"></Resource>
+            </ResourceList>
+         </PackageContents>
+         <Kinoma breakOnStart="false" compile="true" configuration="com.marvell.kinoma.kpr.android.runtime.standard.release" debuggerHost="169.254.241.47:5002" useDefaultHost="true">
+            <VariableList/>
+         </Kinoma>
+         <AssetList/>
+         <Android orientation="unspecified" statusBarStyle="default" id="digitallightwebsocketsclient.example.kinoma.marvell.com" title="Digital Light Websockets Client Example" version="1.0"></Android>
+         <Certificate path="C:\Users\TM\Desktop\tm.p12"></Certificate>
+      </Settings>
+   </AndroidExportSettings>
+   <SDKContainer>
+      <SDK plugin="true" editable="false" name="Kinoma Built-in SDK" location="com.marvell.kinoma.sdk:sdk"></SDK>
+   </SDKContainer>
+   <Usage eclipseInstanceId="b030dfcd-b48a-483e-bff7-6c7f38d381ef" visitCount="6" lastVisit="150804105011+0800" firstVisit="150730121901+0800"></Usage>
+   <RemoteDeviceManager>
+      <UserDevices/>
+   </RemoteDeviceManager>
+   <Editor>
+      <Validation auto="true"></Validation>
+      <ContentAssist autoActivationDelay="250" autoActivation="true" insertSingleProposalAutomatically="true"></ContentAssist>
+      <XML>
+         <Formatting clearBlank="false" alignEndBrackets="false" useSpaces="true" formatComments="true" tabWidth="4" endTagSpace="true" splitAttributes="false" preserveContent="false" lineWidth="72" joinCommentLines="true"></Formatting>
+      </XML>
+      <ThemeStyles/>
+      <Folding enabled="true"></Folding>
+   </Editor>
+   <KPR defaultSimulator="com.marvell.kinoma.create.device"></KPR>
+</Preferences>

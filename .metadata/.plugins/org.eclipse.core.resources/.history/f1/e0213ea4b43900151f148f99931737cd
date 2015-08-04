@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module xmlns="http://www.kinoma.com/kpr/1">
+<program>
+  <handler path="/one">
+    <behavior>
+       <method id="onInvoke" params="handler, message"><![CDATA[
+         trace("1");
+       ]]></method>
+    </behavior>
+  </handler>
+  <handler path="/two">
+    <behavior>
+       <method id="onInvoke" params="handler, message"><![CDATA[
+         trace("2");
+       ]]></method>
+    </behavior>
+  </handler>
+  <script><![CDATA[
+    application.invoke(new Message("/one"));
+    application.invoke(new Message("/two"));
+    trace("0");
+  ]]></script>
+</program>
+</module>

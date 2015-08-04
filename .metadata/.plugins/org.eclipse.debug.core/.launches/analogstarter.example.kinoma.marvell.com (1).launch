@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="kpr.debugshell.launchType">
+<stringAttribute key="kinoma.debug.model.ATTR_KINOMA_APPLICATION" value="analogstarter.example.kinoma.marvell.com"/>
+<booleanAttribute key="kinoma.debug.model.ATTR_KINOMA_COMPILE_SOURCE" value="false"/>
+<booleanAttribute key="kinoma.debug.model.ATTR_KINOMA_ENABLE_BREAK_ON_EXCEPTION" value="true"/>
+<booleanAttribute key="kinoma.debug.model.ATTR_KINOMA_ENABLE_DEBUGGING" value="true"/>
+<booleanAttribute key="kinoma.debug.model.ATTR_KINOMA_LAUNCH_APPLICATION" value="true"/>
+<stringAttribute key="kinoma.debug.model.ATTR_KINOMA_PROJECT" value="analog-starter"/>
+<booleanAttribute key="kinoma.debug.model.ATTR_KINOMA_TEMPORARY" value="true"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/analog-starter/application.xml"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.debug.core.source_locator_id" value="kpr.sourceLocator"/>
+<stringAttribute key="org.eclipse.debug.core.source_locator_memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;sourceLookupDirector&gt;&#13;&#10;&lt;sourceContainers duplicates=&quot;false&quot;&gt;&#13;&#10;&lt;container memento=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#13;&amp;#10;&amp;lt;directory nest=&amp;quot;false&amp;quot; path=&amp;quot;F:\Kinoma\kinomajs-master\kinomajs-master&amp;quot;/&amp;gt;&amp;#13;&amp;#10;&quot; typeId=&quot;org.eclipse.debug.core.containerType.directory&quot;/&gt;&#13;&#10;&lt;container memento=&quot;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot; standalone=&amp;quot;no&amp;quot;?&amp;gt;&amp;#13;&amp;#10;&amp;lt;default/&amp;gt;&amp;#13;&amp;#10;&quot; typeId=&quot;org.eclipse.debug.core.containerType.default&quot;/&gt;&#13;&#10;&lt;/sourceContainers&gt;&#13;&#10;&lt;/sourceLookupDirector&gt;&#13;&#10;"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/analog-starter/application.xml}"/>
+</launchConfiguration>

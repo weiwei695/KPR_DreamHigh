@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;analog-starter/device/steping_motor.js&apos; to &apos;stepping_motor.js&apos;" description="Rename resource &apos;steping_motor.js&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="device/steping_motor.js" name="stepping_motor.js" stamp="1438428530239" updateReferences="true"/>
+</session>
