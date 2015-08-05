@@ -1,0 +1,10 @@
+Jul 27, 2015 9:03:57 AM org.eclipse.birt.chart.device.swt.SwtDisplayServer <init>
+INFO: SWT Display Server: cocoa v4,430
+Jul 27, 2015 9:03:57 AM org.eclipse.birt.chart.device.swt.R31Enhance <clinit>
+INFO: Advanced SWT graphics functions enabled.
+Jul 27, 2015 9:03:57 AM org.eclipse.birt.chart.device.swt.SwtRendererImpl setProperty
+INFO: Using graphics context org.eclipse.swt.graphics.GC@GC {org.eclipse.swt.internal.cocoa.NSGraphicsContext{106102876719168}}
+Jul 27, 2015 9:03:58 AM org.eclipse.birt.chart.render.EmptyWithoutAxes renderSeries
+INFO: org.eclipse.birt.chart.render.EmptyWithoutAxes: renderSeries() [1/2]
+Jul 27, 2015 9:03:58 AM org.eclipse.birt.chart.extension.render.Pie renderSeries
+INFO: {0}: renderSeries() [{1}/{2}]org.eclipse.birt.chart.extension.render.Pie22

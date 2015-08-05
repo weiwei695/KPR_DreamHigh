@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;digital-rack-websockets-server/simulator/led.xml&apos; to &apos;starter.xml&apos;" description="Rename resource &apos;led.xml&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="simulator/led.xml" name="starter.xml" stamp="1438436174503" updateReferences="true"/>
+</session>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Copyright 2011-2014 Marvell Semiconductor, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<program xmlns="http://www.kinoma.com/kpr/1">
+
+<!--
+  This server supports multiple clients and keeps them all 
+  in sync with the current state of the starter.
+-->
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- ASSETS -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    
+	<skin id="whiteSkin" color="white"/>  
+	
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- STYLES -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+	<style id="titleStyle" font="36px" color="black" align="center,middle"/>
+	
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- HANDLERS 1-->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+	
+	<handler path="/info">
+		<behavior>
+			<method id="onInvoke" params="handler, message"><![CDATA[
+				message.responseText = JSON.stringify( { port: serverPort, name: serverName, rackState: rackState } );            
+			]]></method>
+		</behavior>
+	</handler>
+  <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- HANDLERS2 -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <handler path="/gotAnalogResult">
+        <behavior><![CDATA[
+        	function onInvoke( handler, message ){
+        		var result = message.requestObject;  
+        		application.distribute( "onTemValueChanged", result ); 	
+        	    sensorUtils.mdelay(10);
+        		trace(num);
+        		application.distribute( "onHumValueChanged", result );	
+        	}
+        ]]></behavior>
+    </handler>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- BEHAVIORS -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    
+	<behavior id="ApplicationBehavior">
+		<method id="onLaunch" params="application"><![CDATA[
+			application.shared = true;
+		]]></method>
+		<method id="onQuit" params="application"><![CDATA[
+			application.shared = false;
+		]]></method>
+		<method id="ON" params="container"><![CDATA[
+            application.invoke( new MessageWithObject( "pins:/rack/turnOn" ) );   
+            
+			/*for ( i = 0; i < clients.length; i++ ) {			
+				clients[ i ].send(num);
+			}
+			num++;*/
+				
+			 rackState = !rackState; 
+			
+			
+        ]]></method>
+        <method id="OFF" params="container"><![CDATA[
+              application.invoke( new MessageWithObject( "pins:/rack/turnOff" ) ); 
+              	 
+			/*for ( i = 0; i < clients.length; i++ ) {			
+				clients[ i ].send( num );
+			}
+			num++;*/
+			
+			 rackState = !rackState; 
+		
+        ]]></method>
+	</behavior>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- LAYOUTS -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+	
+   <container id="MainContainer" top="0" left="0" bottom="0"
+        right="0">
+        <skin color="white" />
+        <label left="0" right="0" top="70" name="temperature" string="'waiting loading'">
+            <style font="46px" color="black" />
+            <behavior>
+                <method id="onTemValueChanged" params="content, result"><![CDATA[
+                      content.string = "T: " + result.TData;
+                        
+			for ( i = 0; i < clients.length; i++ ) {			
+				clients[ i ].send(result);
+			     }
+				
+
+
+				]]></method>
+            </behavior>
+        </label>
+        <label left="0" right="0" top="100" name="humidity" string="'- - -'">
+            <style font="46px" color="black" />
+            <behavior>
+                <method id="onHumValueChanged" params="content, result"><![CDATA[
+                 
+                      content.string = "H: " + result.RHData;
+           
+				]]></method>
+            </behavior>
+        </label>
+    </container>
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!-- MODEL -->
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+	<script><![CDATA[
+		application.behavior = new ApplicationBehavior();
+		
+		var rackState = false;
+		var  num=0;
+	
+		//Initialize bll with starter.
+		application.invoke( new MessageWithObject( "pins:configure", {
+            rack: {
+                require: "starter",
+                pins: {
+                   starter:{ pin: 28 },
+                  //motor: { pin: 28 },
+	              //motor_DIR: { pin: 6 },
+	              //motor_ENA: { pin: 4 },
+                }
+            }
+        }));
+        
+        
+      
+        
+        
+        
+	
+		var clients = [];
+		var serverPort = 9300; 
+		var serverName = "Server #" + serverPort;
+		
+		var server = new WebSocketServer( serverPort );
+		server.onlaunch = function() {
+		};
+		server.onconnect = function(conn, options) {
+			clients.push( conn );
+			
+			conn.onopen = function() {
+			};
+	
+			conn.onmessage = function( e ) {
+			  //   trace("e:"+e);
+				//e.data == name of method to call
+				application.distribute( e.data );
+				
+			};
+	
+			conn.onclose = function( e ) {	
+				clients.splice( clients.indexOf(this), 1 );
+			};  
+	
+			conn.onerror = function( e ) {
+				conn.close();
+			};
+		};
+		
+		
+		
+	 /* Create message for communication with hardware pins.
+    	   analogSensor: name of pins object, will use later for calling 'analogSensor' methods.
+    	   require: name of js or xml bll file.
+    	   pins: initializes 'analog' (matches 'analog' object in the bll)
+    	  	   	 with the given pin numbers. Pin types and directions
+    	  		 are set within the bll.	*/
+	/*	application.invoke( new MessageWithObject( "pins:configure", {
+        	DHT11: {
+                require: "DHT11",
+                pins: {
+                    dht11: { pin: 52 }
+                }
+            }
+        }) , Message.JSON);*/
+		/* Use the initialized analogSensor object and repeatedly 
+    	   call its read method with a given interval.  */
+		application.invoke( new MessageWithObject( "pins:/rack/TEST?" + 
+			serializeQuery( {
+				repeat: "on",
+				interval: 20,
+				callback: "/gotAnalogResult"
+		} ) ));
+		
+		application.add( new MainContainer() );
+	]]></script>
+</program>
