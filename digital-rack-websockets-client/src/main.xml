@@ -27,8 +27,9 @@
 	<skin id="MainSkin" color="#F0F0F0"/>
 	<skin id="ButtonSkin" color="blue"/>
 	<skin id="ButtonSkinPressed" color="red"/>
+	<skin id="MODESkin" color="#ffe600"/>
 <style id="ButtonStyle" color="white" font="bold 20px Helvetica, sans-serif"/>
-
+<style id="CheckStyle" color="white" font="bold 11px Helvetica, sans-serif"/>
 
 	<skin id= "offSkin" color="#00FFFFFF"/>
 	<skin id= "pressedSkin" color="#B0FFFFFF"/>
@@ -89,6 +90,9 @@
 			application.discover( "digitalrackwebsocketsserver.example.kinoma.marvell.com" );
 			application.shared = true;
 			this.serversTable = {};
+			 application.distribute( "Modeinit");
+			 application.distribute( "stateinit");
+			 
 		]]></method>
 		<method id="onQuit" params="application"><![CDATA[
 			var serversTable = this.serversTable;
@@ -108,27 +112,22 @@
 
 			conn.onmessage = function( e ) {
 
-				//application.distribute( e.data );
-				str="e.data";
-				trace("str="+str);
-				TValue=substring(str,str.indexOf("T")+1,str.indexOf("H")); 
-				HValue=substring(str.indexOf("H")+1,str.indexOf("S"));
-				State=substring(str.indexOf("S")+1,);
+				//application.distribute( e.data );result.toString().substring( 0, 8 )
+				str=e.data.toString();
+			
+				
+				TValue=str.substring(str.indexOf("T")+1,str.indexOf("H")); 
+				HValue=str.substring(str.indexOf("H")+1,str.indexOf("S"));
+				State=str.substring(str.indexOf("S")+1,);
+				
 				application.distribute( "TemValue",TValue);
 				application.distribute( "HumValue",HValue);
-			/*	if(rackState!=State){
-				       rackState=State;
-				       application.distribute( "Changestate");
-				     
-				}
-				
-				
-			/*	if(selectstate==0){
-				application.distribute( "TemValue",  e.data );}
-				else{ 	
-				application.distribute( "HumValue",  e.data );}
-				selectstate=!selectstate;*/
-				
+		
+		     if(rackState!=State){
+				   rackState=State;
+				   application.distribute( "stateinit");    
+			   }
+			   
 			};
               
 			conn.onclose = function() {
@@ -179,34 +178,73 @@
             </behavior>
              </label>
         </container>
-  
-  <!-- ++++++++++++++控制按钮+++++++++++++++++++++ -->
-         <container top="170" left="100" bottom="40" right="100" skin="ButtonSkin" active="true">
-            <label top="0" left="0" bottom="0" right="0" 
-            	string="' '" style="ButtonStyle"/>    
+
+   <!-- ++++++++++++++智能切换+++++++++++++++++++++ -->
+
+ 
+    <container top="130" left="115" bottom="85" right="115" skin="ButtonSkin" active="true">
+	 <label top="0" left="0" bottom="0" right="0" string="' '" style="CheckStyle"/>    
             <behavior>
-              <method id="Changestate" params="container, id, x, y, ticks"><![CDATA[
-                    container.skin = ButtonSkin;
-                     if (rackState) {           
-                		container.first.string = "FOLD";
+              <method id="Modeinit" params="container, id, x, y, ticks"><![CDATA[   
+                   
+                     if (modestate==true) {           
+                		container.first.string = "Automatic mode";
                 	} else {
-                		container.first.string = "STRETCH";
+                		container.first.string = "Manual mode";
                 	}
                ]]></method>
                
                 <method id="onTouchBegan" params="container, id, x, y, ticks"><![CDATA[
                     container.skin = ButtonSkinPressed;
-                    
-                    /* Turn starter on/off and switch the button's label */
-                    if (rackState) {
-                    	//sends new message to rack object's 'turnOff' method.
-            			application.distribute( "clicked", "ON" );               
-                		container.first.string = "FOLD";
+                     modestate= !modestate ;
+                    if (modestate) {        
+            
+                	    container.first.string = "Automatic mode";
                 	} else {
-            			application.distribute( "clicked", "OFF" );
-                		container.first.string = "STRETCH";
+                
+                		container.first.string = "Manual mode";
                 	}
-                   rackState = !rackState; 	                    
+                  	application.distribute( "clicked", modestate);	                    
+                ]]></method>
+                <method id="onTouchEnded" params="container, id, x, y, ticks"><![CDATA[
+                    container.skin = ButtonSkin;	                      
+                ]]></method>
+            </behavior>   
+        </container>
+  <!-- ++++++++++++++控制按钮+++++++++++++++++++++ -->
+         <container top="190" left="100" bottom="20" right="100" skin="ButtonSkin" active="true">
+            <label top="0" left="0" bottom="0" right="0" string="' '" style="ButtonStyle"/>    
+            <behavior>
+              <method id="stateinit" params="container, id, x, y, ticks"><![CDATA[
+                    container.skin = MODESkin;
+                     if (rackState) {           
+                		container.first.string = "STRETCH";
+                	} else {
+                		container.first.string = "FOLD";
+                	}
+                	
+               ]]></method>
+               
+                <method id="onTouchBegan" params="container, id, x, y, ticks"><![CDATA[
+                    container.skin = ButtonSkinPressed;
+                 
+                   
+                   
+                       rackState= !rackState;  
+                    if (rackState) {
+                    
+            			application.distribute( "clicked", "FOLD");         
+                		container.first.string = "FOLD";
+                		
+                	} else {
+                	
+            			application.distribute( "clicked", "STRETCH");
+                		container.first.string = "STRETCH";
+                	
+                	}
+                	
+                       
+                                 
                 ]]></method>
                 <method id="onTouchEnded" params="container, id, x, y, ticks"><![CDATA[
                     container.skin = ButtonSkin;	                      
@@ -224,6 +262,7 @@
 
 	<script><![CDATA[
 		var rackState= false;
+		var modestate=true;
 		var str=0;
 		var TValue=0; 
 		var HValue=0;
