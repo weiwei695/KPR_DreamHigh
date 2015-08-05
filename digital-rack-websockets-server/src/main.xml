@@ -68,11 +68,9 @@
         <behavior><![CDATA[
         	function onInvoke( handler, message ){
         		var result = message.requestObject;
-        	application.distribute( "Sendtoclient", result ); 	
+        	    application.distribute( "Sendtoclient", result ); 	
         	 
-        		   sensorUtils.mdelay(10);
         		application.distribute( "onTemValueChanged", result ); 	
-        	 
         		application.distribute( "onHumValueChanged", result );	
         	}
         ]]></behavior>
@@ -89,14 +87,14 @@
 		<method id="onQuit" params="application"><![CDATA[
 			application.shared = false;
 		]]></method>
-		<method id="ON" params="container"><![CDATA[
+		<method id="FOLD" params="container"><![CDATA[
             application.invoke( new MessageWithObject( "pins:/rack/turnOn" ) );   
            
 			// rackState = !rackState; 
 			
 			
         ]]></method>
-        <method id="OFF" params="container"><![CDATA[
+        <method id="STRETCH" params="container"><![CDATA[
               application.invoke( new MessageWithObject( "pins:/rack/turnOff" ) ); 
            
 			// rackState = !rackState; 
@@ -111,8 +109,7 @@
 			}
 		
         ]]></method>
-        
-        
+
         
         
         <method id="onInvoke" params="application, message"><![CDATA[
@@ -200,7 +197,7 @@
 <!-- LAYOUTS -->
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-	<column id="ServerLogHeader" left="0" right="0" top="30" style="serverInfoStyle">
+	<column id="ServerLogHeader" left="0" right="0" top="50" style="serverInfoStyle">
 		<label top="0" left="0" right="0" string="'KPR HTTP Server:'"/>                
 		<label left="0" right="0" string="'(IP address unknown)'">
 			<behavior>
@@ -234,14 +231,12 @@
    <container id="MainContainer" top="0" left="0" bottom="0"
         right="0">
         <skin color="white" />
-        <label left="0" right="0" top="0" name="temperature" string="'waiting loading'">
+        <label left="50" right="0" top="0" name="temperature" string="'waiting loading'">
             <style font="20px" color="black" />
             <behavior>
                 <method id="onTemValueChanged" params="content, result"><![CDATA[
-                      content.string = "T: " + result.TData;
-                      
-                      
-                        
+                      content.string = "Temperature:" + result.TData+" °c";
+          
 			/*for ( i = 0; i < clients.length; i++ ) {			
 				clients[ i ].send(result.TData);
 			     }
@@ -251,11 +246,11 @@
 				]]></method>
             </behavior>
         </label>
-        <label left="30" right="0" top="0" name="humidity" string="'waiting loading'">
+        <label left="50" right="0" top="20" name="humidity" string="'waiting loading'">
             <style font="20px" color="black" />
             <behavior>
                 <method id="onHumValueChanged" params="content, result"><![CDATA[
-                      content.string = "H: " + result.RHData;  
+                      content.string = "Humidity:    " + result.RHData+"  %";  
                 
 		/*	for ( i = 0; i < clients.length; i++ ) {			
 				clients[ i ].send(liuzhen);
@@ -266,7 +261,7 @@
             </behavior>
         </label>
         	<column like="ServerLogHeader" height="80"/>
-		<scroller left="4" right="4" top="80" bottom="0" clip="true" like="SCROLLER.VerticalScroller">
+		<scroller left="4" right="4" top="100  " bottom="0" clip="true" like="SCROLLER.VerticalScroller">
 			<scroller left="0" right="0" top="30" bottom="undefined" like="SCROLLER.HorizontalScroller">
 				<column left="0" top="0" style="serverLogLineStyle">
 					<behavior>
@@ -303,6 +298,8 @@
 		
 		var rackState = false;
 		var SendData=0;
+		var modestate=true;
+		var str=0;
 	
 		//Initialize bll with starter.
 		application.invoke( new MessageWithObject( "pins:configure", {
@@ -316,6 +313,27 @@
                 }
             }
         }));
+        /*	application.invoke( new MessageWithObject( "pins:configure", {
+        	DHT11: {
+                require: "DHT11",
+                pins: {
+                    dht11: { pin: 52 }
+                }
+            }
+        }) , Message.JSON);*/
+		/* Use the initialized analogSensor object and repeatedly 
+    	   call its read method with a given interval.  */
+		application.invoke( new MessageWithObject( "pins:/rack/TEST?" + 
+			serializeQuery( {
+				repeat: "on",
+				interval: 40,
+				callback: "/gotAnalogResult"
+		} ) ));
+        
+        
+        
+        
+        
         
 		var clients = [];
 		var serverPort = 9300; 
@@ -331,10 +349,16 @@
 			};
 	
 			conn.onmessage = function( e ) {
-			  //   trace("e:"+e);
-				//e.data == name of method to call
+			
+				if((e.data=="FOLD")||(e.data=="STRETCH")){
 				application.distribute( e.data );
-				
+			
+			
+				  }
+				  else  {
+				       modestate=e.data;
+				     
+				       }
 			};
 	
 			conn.onclose = function( e ) {	
@@ -347,29 +371,8 @@
 		};
 		
 		
-		
-	 /* Create message for communication with hardware pins.
-    	   analogSensor: name of pins object, will use later for calling 'analogSensor' methods.
-    	   require: name of js or xml bll file.
-    	   pins: initializes 'analog' (matches 'analog' object in the bll)
-    	  	   	 with the given pin numbers. Pin types and directions
-    	  		 are set within the bll.	*/
-	/*	application.invoke( new MessageWithObject( "pins:configure", {
-        	DHT11: {
-                require: "DHT11",
-                pins: {
-                    dht11: { pin: 52 }
-                }
-            }
-        }) , Message.JSON);*/
-		/* Use the initialized analogSensor object and repeatedly 
-    	   call its read method with a given interval.  */
-		application.invoke( new MessageWithObject( "pins:/rack/TEST?" + 
-			serializeQuery( {
-				repeat: "on",
-				interval: 20,
-				callback: "/gotAnalogResult"
-		} ) ));
+	
+	
 		
 		
 		var model = application.behavior = new ApplicationBehavior();

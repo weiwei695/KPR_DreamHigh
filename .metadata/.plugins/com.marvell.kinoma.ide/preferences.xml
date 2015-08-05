@@ -82,9 +82,7 @@
       <ContentAssist autoActivationDelay="250" insertSingleProposalAutomatically="true" autoActivation="true"></ContentAssist>
    </Editor>
    <RemoteDeviceManager>
-      <UserDevices>
-         <Device location="http://192.168.1.107:10000" name="Dream_High"></Device>
-      </UserDevices>
+      <UserDevices/>
    </RemoteDeviceManager>
-   <Usage lastVisit="150804090209+0800" firstVisit="150725110751+0800" visitCount="9" eclipseInstanceId="c1b0e9cb-c559-49de-a98f-6f024320106e"></Usage>
+   <Usage lastVisit="150805011854+0800" firstVisit="150725110751+0800" visitCount="10" eclipseInstanceId="c1b0e9cb-c559-49de-a98f-6f024320106e"></Usage>
 </Preferences>
