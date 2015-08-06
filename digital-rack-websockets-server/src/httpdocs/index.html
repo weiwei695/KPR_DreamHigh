@@ -7,19 +7,24 @@
 <script src="Scripts/RGraph.line.js"></script>
 </head>
 <body>
+<div>
 <canvas style="float:left" id="Humidity" width="600" height="250">[No canvas support]</canvas>
-<canvas style="float:left" id="Temperature" width="600" height="250">[No canvas support]</canvas><br />
-<div class="row">
-
-    <button type="button" class="btn btn-lg btn-success col-md-3">Connect</button>
-    <button type="button" class="btn btn-lg btn-danger col-md-3">Close</button>
+<canvas style="float:left" id="Temperature" width="600" height="250">[No canvas support]</canvas>
+</div>
+<br>
+<div class="col">
     <button type="button" class="btn btn-lg btn-warning col-md-3">Stretch</button>
     <button type="button" class="btn btn-lg btn-info col-md-3">Fold</button>
             </div>
+         <div id="test"></div>   
+
 </body>
 </html>
     <!--Humidity-->
     <script>
+
+
+
         $(document).ready(function () {
             d1 = [];
             l = 0; // The letter 'L' - NOT a one

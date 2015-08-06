@@ -1,66 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  Copyright 2011-2014 Marvell Semiconductor, Inc.
-
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
-
-      http://www.apache.org/licenses/LICENSE-2.0
-
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
--->
+<!-- Copyright 2011-2014 Marvell Semiconductor, Inc. Licensed under the Apache 
+    License, Version 2.0 (the "License"); you may not use this file except in 
+    compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+    Unless required by applicable law or agreed to in writing, software distributed 
+    under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+    OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+    the specific language governing permissions and limitations under the License. -->
 <program xmlns="http://www.kinoma.com/kpr/1">
-  <require path="themes/sample/theme" id="THEME"/>
-    <require path="mobile/scroller" id="SCROLLER"/>
-    <require path="mobile/control" id="CONTROL"/>
+    <require path="themes/sample/theme" id="THEME" />
+    <require path="mobile/scroller" id="SCROLLER" />
+    <require path="mobile/control" id="CONTROL" />
 
-<!--
-  This server supports multiple clients and keeps them all 
-  in sync with the current state of the starter.
--->
+    <!-- This server supports multiple clients and keeps them all in sync 
+        with the current state of the starter. -->
 
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!-- ASSETS -->
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-    
-	<skin id="serverLogSkin" color="#6cb535"/>
-	<texture id="toolsTexture" small="./assets/tools.png"/>
-	<skin id="toolsSkin" texture="toolsTexture" x="0" y="0" width="32" height="32">
-		<states offset="32"/>
-	</skin>
-	<skin id="whiteSkin" color="white"/>  
-	
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!-- STYLES -->
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- ASSETS -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-	<style id="titleStyle" font="36px" color="black" align="center,middle"/>
-	
-		<style id="serverLogLineStyle" font="20px" color="black" align="left"/>
-	<style id="serverInfoStyle" font="bold 24px" color="black" align="center,middle">
-		<margins top="1" bottom="1"/>
-	</style>
-	<style id="serverLogHeaderStyle" font="20px" color="white" align="left,middle" lines="1">
-		<margins left="10"/>
-	</style>
-	
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!-- HANDLERS 1-->
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-	
-	<handler path="/info">
-		<behavior>
-			<method id="onInvoke" params="handler, message"><![CDATA[
+    <skin id="serverLogSkin" color="#6cb535" />
+    <texture id="toolsTexture" small="./assets/tools.png" />
+    <skin id="toolsSkin" texture="toolsTexture" x="0" y="0" width="32"
+        height="32">
+        <states offset="32" />
+    </skin>
+    <skin id="whiteSkin" color="white" />
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- STYLES -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <style id="titleStyle" font="36px" color="black" align="center,middle" />
+
+    <style id="serverLogLineStyle" font="20px" color="black"
+        align="left" />
+    <style id="serverInfoStyle" font="bold 24px" color="black"
+        align="center,middle">
+        <margins top="1" bottom="1" />
+    </style>
+    <style id="serverLogHeaderStyle" font="20px" color="white"
+        align="left,middle" lines="1">
+        <margins left="10" />
+    </style>
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- HANDLERS 1 -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <handler path="/info">
+        <behavior>
+            <method id="onInvoke" params="handler, message"><![CDATA[
 				message.responseText = JSON.stringify( { port: serverPort, name: serverName, rackState: rackState } ); 
 			]]></method>
-		</behavior>
-	</handler>
-  <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+        </behavior>
+    </handler>
+    
+    <handler path="/envData">
+    	<behavior>
+    		<method id="onInvoke" params="handler,message"><![CDATA[
+    		
+    			message.responseText=JSON.stringify(envData);
+    			message.responseCode=200;
+    		]]>
+    		</method>
+    	</behavior>
+    </handler>
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     <!-- HANDLERS2 -->
     <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
@@ -68,26 +73,37 @@
         <behavior><![CDATA[
         	function onInvoke( handler, message ){
         		var result = message.requestObject;
-        	    application.distribute( "Sendtoclient", result ); 	
-        	 
-        		application.distribute( "onTemValueChanged", result ); 	
+        		envData.TData=result.TData;
+        		envData.RHData=result.RHData;
+        		
+        		//var hresult=new Message("107.191.53.168:3000"+".json")
+        		//message.method="PUT";
+        		//var body=hresult.requestText=JSON.stringify(body);
+        		//application.invoke(hresult,Message.Text);
+        	
+  
+        	    application.distribute( "Sendtoclient", result );
+        	     	
+        	    application.distribute( "onTemValueChanged", result ); 	
         		application.distribute( "onHumValueChanged", result );	
         	}
         ]]></behavior>
     </handler>
-
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!-- BEHAVIORS -->
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
     
-	<behavior id="ApplicationBehavior">
-		<method id="onLaunch" params="application"><![CDATA[
+
+
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- BEHAVIORS -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <behavior id="ApplicationBehavior">
+        <method id="onLaunch" params="application"><![CDATA[
 			application.shared = true;
 		]]></method>
-		<method id="onQuit" params="application"><![CDATA[
+        <method id="onQuit" params="application"><![CDATA[
 			application.shared = false;
 		]]></method>
-		<method id="FOLD" params="container"><![CDATA[
+        <method id="FOLD" params="container"><![CDATA[
             application.invoke( new MessageWithObject( "pins:/rack/turnOn" ) );   
            
 			// rackState = !rackState; 
@@ -100,18 +116,19 @@
 			// rackState = !rackState; 
 		
         ]]></method>
-        
-         <method id="Sendtoclient" params="container, result"><![CDATA[
+
+        <method id="Sendtoclient" params="container, result"><![CDATA[
              
             SendData="T"+result.TData+"H"+result.RHData+"S"+result.State;
 			for ( i = 0; i < clients.length; i++ ) {			
 				clients[ i ].send( SendData);
 			}
+			
 		
         ]]></method>
 
-        
-        
+
+
         <method id="onInvoke" params="application, message"><![CDATA[
 			var path = message.path;
 			var scheme = message.scheme.toLowerCase();
@@ -132,18 +149,18 @@
 			application.delegate(action, message);
 			log(message.method.toUpperCase() + " " + path + " " + message.status);
 		]]></method>
-		<method id="doIndexAction" params="application, message"><![CDATA[
+        <method id="doIndexAction" params="application, message"><![CDATA[
             message.status = 200;
             message.responseText = Files.readText(mergeURI(application.url, this.root + "/index.html")).replace("[SERVER]", this.server);
             message.setResponseHeader("Content-Type", "text/html");
  		]]></method>
-		
-		<method id="doLogAction" params="application, message"><![CDATA[
+
+        <method id="doLogAction" params="application, message"><![CDATA[
             message.status = 200;
             var query = parseQuery(message.requestText);
             application.distribute("onLogTextColorChange", query.color);
 		]]></method>
-		<method id="doDefaultAction" params="application, message"><![CDATA[
+        <method id="doDefaultAction" params="application, message"><![CDATA[
 			var path = message.path;
 			var uri = mergeURI(application.url, this.root + path);
 			if (Files.exists(uri)) {
@@ -164,7 +181,7 @@
                 message.setResponseHeader("Content-Type", "text/html");
 			}
 		]]></method>
-		<method id="getExtension" params="path"><![CDATA[
+        <method id="getExtension" params="path"><![CDATA[
 			var extension = "";
 			try {
 				var dot = path.lastIndexOf(".");
@@ -175,7 +192,7 @@
 			}
 			return extension;
 		]]></method>
-		<method id="pathToMIME" params="path"><![CDATA[
+        <method id="pathToMIME" params="path"><![CDATA[
 			var extension = this.getExtension(path);
 			switch(extension) {
 				case 'htm':
@@ -190,48 +207,51 @@
 					return "application/octet-stream";
 			}
 		]]></method>
-		
-	</behavior>
 
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!-- LAYOUTS -->
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    </behavior>
 
-	<column id="ServerLogHeader" left="0" right="0" top="50" style="serverInfoStyle">
-		<label top="0" left="0" right="0" string="'KPR HTTP Server:'"/>                
-		<label left="0" right="0" string="'(IP address unknown)'">
-			<behavior>
-				<method id="onComplete" params="container, message, json"><![CDATA[
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- LAYOUTS -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <column id="ServerLogHeader" left="0" right="0" top="50"
+        style="serverInfoStyle">
+        <label top="0" left="0" right="0" string="'KPR HTTP Server:'" />
+        <label left="0" right="0" string="'(IP address unknown)'">
+            <behavior>
+                <method id="onComplete" params="container, message, json"><![CDATA[
 					if (json && ("ip_address" in json)) {
 						container.string = model.server = 'http://' + json.ip_address + ':' + application.serverPort + '/';
 						log("Server started");
 					}
 				]]></method>
-				<method id="onDisplaying" params="container"><![CDATA[
+                <method id="onDisplaying" params="container"><![CDATA[
 					container.invoke(new Message("xkpr://wifi/status"), Message.JSON);
 				]]></method>
-			</behavior>
-		</label>                
-		<content height="2"/>
-		<label left="0" right="0" height="24" skin="serverLogSkin" style="serverLogHeaderStyle" string="'Log'"/>
-		<content height="2"/>
-	</column>
-	
-	<label id="ServerLogLine" left="0" height="20" string="$"/>
+            </behavior>
+        </label>
+        <content height="2" />
+        <label left="0" right="0" height="24" skin="serverLogSkin"
+            style="serverLogHeaderStyle" string="'Log'" />
+        <content height="2" />
+    </column>
 
-	<container id="ExitButton" left="0" top="0" active="true">
-		<behavior like="CONTROL.ButtonBehavior">
-			<method id="onTap" params="container"><![CDATA[
+    <label id="ServerLogLine" left="0" height="20" string="$" />
+
+    <container id="ExitButton" left="0" top="0" active="true">
+        <behavior like="CONTROL.ButtonBehavior">
+            <method id="onTap" params="container"><![CDATA[
 				application.invoke(new Message("xkpr://shell/close?id=" + application.id));
-			]]></method>	
-		</behavior>
-		<content skin="toolsSkin"/>
-	</container>
-	
-   <container id="MainContainer" top="0" left="0" bottom="0"
+			]]></method>
+        </behavior>
+        <content skin="toolsSkin" />
+    </container>
+
+    <container id="MainContainer" top="0" left="0" bottom="0"
         right="0">
         <skin color="white" />
-        <label left="50" right="0" top="0" name="temperature" string="'waiting loading'">
+        <label left="50" right="0" top="0" name="temperature"
+            string="'waiting loading'">
             <style font="20px" color="black" />
             <behavior>
                 <method id="onTemValueChanged" params="content, result"><![CDATA[
@@ -246,7 +266,8 @@
 				]]></method>
             </behavior>
         </label>
-        <label left="50" right="0" top="20" name="humidity" string="'waiting loading'">
+        <label left="50" right="0" top="20" name="humidity"
+            string="'waiting loading'">
             <style font="20px" color="black" />
             <behavior>
                 <method id="onHumValueChanged" params="content, result"><![CDATA[
@@ -260,40 +281,42 @@
 				]]></method>
             </behavior>
         </label>
-        	<column like="ServerLogHeader" height="80"/>
-		<scroller left="4" right="4" top="100  " bottom="0" clip="true" like="SCROLLER.VerticalScroller">
-			<scroller left="0" right="0" top="30" bottom="undefined" like="SCROLLER.HorizontalScroller">
-				<column left="0" top="0" style="serverLogLineStyle">
-					<behavior>
-						<method id="onLogText" params="column, string"><![CDATA[
+        <column like="ServerLogHeader" height="80" />
+        <scroller left="4" right="4" top="100  " bottom="0"
+            clip="true" like="SCROLLER.VerticalScroller">
+            <scroller left="0" right="0" top="30" bottom="undefined"
+                like="SCROLLER.HorizontalScroller">
+                <column left="0" top="0" style="serverLogLineStyle">
+                    <behavior>
+                        <method id="onLogText" params="column, string"><![CDATA[
 							var line = new ServerLogLine(string);
 							column.add(line);
 							column.container.container.scrollTo(0, 0x7FFFF);
-						]]></method>	
-						<method id="onLogTextColorChange" params="column, color"><![CDATA[
+						]]></method>
+                        <method id="onLogTextColorChange" params="column, color"><![CDATA[
 							column.style = new Style({font: column.style.font, align: column.style.horizontalAlignment, color: color});
-						]]></method>	
-					</behavior>
-				</column>
-				<content like="SCROLLER.HorizontalScrollbar">
-					<behavior like="SCROLLER.HorizontalScrollbarBehavior">
-						<method id="onScrolled" params="scrollbar"><![CDATA[
+						]]></method>
+                    </behavior>
+                </column>
+                <content like="SCROLLER.HorizontalScrollbar">
+                    <behavior like="SCROLLER.HorizontalScrollbarBehavior">
+                        <method id="onScrolled" params="scrollbar"><![CDATA[
 							SCROLLER.HorizontalScrollbarBehavior.prototype.onScrolled.call(this, scrollbar);
 							var container = scrollbar.container.container;
 							scrollbar.y = container.y + container.height - scrollbar.height;
-						]]></method>	
-					</behavior>
-				</content>
-			</scroller>
-			<content like="SCROLLER.VerticalScrollbar"/>
-		</scroller>
-		<container like="ExitButton"/>
+						]]></method>
+                    </behavior>
+                </content>
+            </scroller>
+            <content like="SCROLLER.VerticalScrollbar" />
+        </scroller>
+        <container like="ExitButton" />
     </container>
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!-- MODEL -->
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- MODEL -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-	<script><![CDATA[
+    <script><![CDATA[
 		application.behavior = new ApplicationBehavior();
 		
 		var rackState = false;
@@ -389,7 +412,8 @@
 				get: {
 					item: {
 						"/":							{ action: "doIndexAction" },
-			
+						"/envData":					{ action: "doenvDataAction" }
+				
 					},
 				},
 				post: {
@@ -406,7 +430,7 @@
 	    	application.distribute("onLogText", line);
 	    }
 		
-		
+		var envData={};
 		
 		
 		
