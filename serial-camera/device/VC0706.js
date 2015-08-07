@@ -169,7 +169,7 @@ exports.close = function(){
 	this.serial.close();
 }
 
-function sendCommand(serial, cmd, args, responseLength){
+function sendCommand(serial, cmd, args, responseLength){//sendCommand( this.serial, RESET, [ 0x0 ], 5 );
     // Send the command
     serial.write(0x56, 0, cmd, args);
 

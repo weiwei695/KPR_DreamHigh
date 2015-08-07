@@ -1,0 +1,33 @@
+//@module
+exports.pins = {
+	serial: {type: "Serial", baud: 9600  }
+};
+
+exports.configure = function(){
+	// initialize the serial port
+	this.serial.init();
+}
+
+exports.read = function(){
+	return this.serial.read( "String" );
+}
+
+exports.write = function(){
+	this.serial.write(0x01);
+}
+
+exports.MCU_command = function(){
+	//trace("xu\n");
+	this.serial.write(59);
+	//trace("tian\n");
+	//sensorUtils.udelay(10);
+	trace("ming\n");
+	var response = this.serial.read( "Array", 1 );
+	trace( response + "\n");
+	return response;
+	//trace("ming\n");
+}
+
+exports.close = function(){
+	this.serial.close();
+}

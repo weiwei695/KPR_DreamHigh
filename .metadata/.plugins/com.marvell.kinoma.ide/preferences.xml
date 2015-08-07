@@ -20,10 +20,10 @@
          <Certificate path="C:\Users\TM\Desktop\tm.p12"></Certificate>
       </Settings>
    </AndroidExportSettings>
+   <Usage eclipseInstanceId="b030dfcd-b48a-483e-bff7-6c7f38d381ef" visitCount="8" lastVisit="150807003228+0800" firstVisit="150730121901+0800"></Usage>
    <SDKContainer>
       <SDK plugin="true" editable="false" name="Kinoma Built-in SDK" location="com.marvell.kinoma.sdk:sdk"></SDK>
    </SDKContainer>
-   <Usage eclipseInstanceId="b030dfcd-b48a-483e-bff7-6c7f38d381ef" visitCount="6" lastVisit="150804105011+0800" firstVisit="150730121901+0800"></Usage>
    <RemoteDeviceManager>
       <UserDevices/>
    </RemoteDeviceManager>

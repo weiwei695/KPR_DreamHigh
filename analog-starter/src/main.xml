@@ -16,11 +16,11 @@
     <handler path="/gotAnalogResult">
         <behavior><![CDATA[
         	function onInvoke( handler, message ){
-        	//trace("me\n");
         		var result = message.requestObject;  
+        		trace("result = " + result + "\n");
         		application.distribute( "onTemValueChanged", result ); 	
         		application.distribute( "onHumValueChanged", result );
-        		trace("one\n");
+        		//trace("one\n");
         	}
         ]]></behavior>
     </handler>
@@ -37,8 +37,8 @@
             <behavior>
                 <method id="onTemValueChanged" params="content, result"><![CDATA[
                       //content.string = "T: " + result.TData + "C";
-                      content.string = result;
-                      trace("two\n");
+                      //content.string = result.toString().substring( 0, 1 );
+                      content.string = result[2];
 				]]></method>
             </behavior>
         </label>
@@ -47,8 +47,7 @@
             <behavior>
                 <method id="onHumValueChanged" params="content, result"><![CDATA[
                       //content.string = "H: " + result.RHData + "H";
-                      content.string = result;
-                      trace("three\n");
+                      content.string = result[0];
 				]]></method>
             </behavior>
         </label>
@@ -61,7 +60,7 @@
     	   pins: initializes 'analog' (matches 'analog' object in the bll)
     	  	   	 with the given pin numbers. Pin types and directions
     	  		 are set within the bll.	*/
-		application.invoke( new MessageWithObject( "pins:configure", {
+/*		application.invoke( new MessageWithObject( "pins:configure", {
         	DHT11: {
                 require: "DHT11",
                 pins: {
@@ -76,18 +75,34 @@
 		            motor: {pin: 28} 
 		        }
 		    }
-        }) );//加不加, Message.JSON都行。
-
+        }) );//加不加, Message.JSON都行。*/
+/*		application.invoke( new MessageWithObject( "pins:configure",{
+			MCU: {
+				require: "MCU",
+				pins: {
+					dht11: { rx: 33, tx: 31 }
+				}
+			}
+		}), Message.JSON );*/
+		
+		application.invoke(new MessageWithObject( "pins:configure", {
+		    motor: {
+		        require: "stepping_motor",
+		        pins: {
+		            motor_DIR: {pin: 6},
+		            motor_ENA: {pin: 4},
+		            motor_PWM: {pin: 28},
+		            dht11: { rx: 33, tx: 31 }
+		        }
+		    }}) , Message.JSON);
     	/* Use the initialized analogSensor object and repeatedly 
     	   call its read method with a given interval.  */
-		application.invoke( new MessageWithObject( "pins:/DHT11/start_DHT11?" + 
+		application.invoke( new MessageWithObject( "pins:/motor/MCU_command?" + 
 			serializeQuery( {
 				repeat: "on",
 				interval: 20,
 				callback: "/gotAnalogResult"
 		} ) ));
-		
-
 		application.add( new MainContainer() );           
     ]]></script>
 </program>

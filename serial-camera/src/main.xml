@@ -54,7 +54,7 @@
 			application.invoke( new MessageWithObject( "pins:/camera/setCompression", 100 ), Message.JSON );
 
 			//set image size to small
-			application.invoke( new MessageWithObject( "pins:/camera/setImageSize", { w:320, h:140 } ), Message.JSON );
+			application.invoke( new MessageWithObject( "pins:/camera/setImageSize", { w:320, h:140 } ));//, Message.JSON 
 			
 			//poll button every 70ms 
 			application.invoke( new MessageWithObject( "pins:/button/read?repeat=on&callback=/gotButton&interval=70" ) );
