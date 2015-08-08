@@ -1,4 +1,5 @@
-﻿<html>
+<html>
+<meta http-equiv="Content-Type" content="textml; charset=UTF-8">
 <head>
 <script src="Scripts/RGraph.line.js"></script>
 <script src="Scripts/RGraph.common.dynamic.js"></script>
@@ -6,18 +7,43 @@
 <script src="Scripts/jquery.js"></script>
 <script src="Scripts/jquery.min.js"></script>
 <script src="Scripts/RGraph.line.js"></script>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="css/bootstrap-theme.css" />
+<title>Kinoma Create智能家居-晾衣架</title>
 </head>
 <body>
-<div>
-<canvas style="float:left" id="Humidity" width="600" height="250">[No canvas support]</canvas>
-<canvas style="float:left" id="Temperature" width="600" height="250">[No canvas support]</canvas>
+<div class="header jumbotron">
+	<h2 style="margin-top: 0">Kinoma Create智能家居-晾衣架</h2>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<canvas style="float:left;margin-left:15px;" id="Humidity" width="600" height="250">[No canvas support]</canvas>
+</div>
+</div>
+<div class="row">
+<div class="col-md-6">
+<canvas style="float:left;margin-left:15px;" id="Temperature" width="600" height="250">[No canvas support]</canvas>
+</div>
+</div>
+<div class="row">
+	<div class="col-md-2" style="font-size:20px">
+		<span style="margin-left:40px;">humidity:</span><span id="humidity">0</span>
+	</div>
+	<div class="col-md-2" style="font-size:20px">
+		<span>temperature:</span><span id="temperature">0</span>
+	</div>
 </div>
 <br>
-<div class="col">
-    <button type="button" class="btn btn-lg btn-warning col-md-3">Stretch</button>
-    <button type="button" class="btn btn-lg btn-info col-md-3">Fold</button>
-            </div>
-    <a href="javascript:doajax();"></a>         <div id="testja"></div> 
+<div class="col" style="margin-left:15px;">
+    <button id="btn1" type="button" class="btn btn-lg btn-warning col-md-1">Stretch</button>
+    <button id="btn2" type="button" class="btn btn-lg btn-info  col-md-1" style="margin-left:5px;">Fold</button>
+</div>
+<div class="footer jumbotron">
+	<p>Designed by @Dream_High     2015/08/09</p>
+</div>
 
 </body>
 </html>
@@ -25,11 +51,43 @@
     <script>
 
 var r1;
+var stateCtl=0;
+
 
 
         $(document).ready(function (){ 
         
+        $("button").click(function(e){
+    var idClicked = e.target.id;
+    if(idClicked=="btn1")
+      {
+        stateCtl=1;
+      }     
+      else if (idClicked=="btn2")
+      {
+        stateCtl=0;       
+      }
+      $.ajax({
+                type: "GET", 
+                url: "http://localhost:10001/StateCtl",
+                data: {state:stateCtl},
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+              
+                success: function (response) {
+                    alert(response.d);
+                },
+                failure: function (response) {
+                    alert("Falla - " + response.d);
+                }
+            });
+        });
 
+
+  
+      
+
+     
    
          
             d1 = [];
@@ -109,6 +167,7 @@ var r1;
         $.getJSON(url, function (data) {
               r1=data.TData;    
           //alert(r1);
+          $("#temperature").text(r1);
         });
      
             
@@ -262,6 +321,7 @@ var r1;
                var url = '/envData';
         $.getJSON(url, function (data) {
               r2=data.RHData;
+               $("#humidity").text(r2);
         });
         
                 // "cache" this in a local variable

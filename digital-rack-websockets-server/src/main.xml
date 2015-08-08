@@ -60,8 +60,23 @@
     		<method id="onInvoke" params="handler,message"><![CDATA[
     		    message.status = 200;
     			message.responseText=JSON.stringify(envData);
-    			message.responseCode=200;
     		    message.setResponseHeader("Content-Type", "application/json");
+    		]]>
+    		</method>
+    	</behavior>
+    </handler>
+    <handler path="/StateCtl">
+    	<behavior>
+    		<method id="onInvoke" params="handler,message">
+    		<![CDATA[
+    		if (message.method == "GET") {
+    		 message.status = 200;
+      message.setResponseHeader("Content-Type", "text/plain");
+      message.responseText = message.query;
+    }
+    else {
+      message.status = 405; // method not allowed
+    }
     		]]>
     		</method>
     	</behavior>
@@ -75,11 +90,11 @@
         	function onInvoke( handler, message ){
         		var result = message.requestObject;
         		
-        			envData.TData=num;
-        		envData.RHData=num;
-        		num++;
-        	//envData.TData=result.TData;
-        	//	envData.RHData=result.RHData;
+        		//envData.TData=num;
+        		//envData.RHData=num;
+        		//num++;        // test adding num
+        	envData.TData=result.TData;
+        		envData.RHData=result.RHData;
         		
         		//var hresult=new Message("107.191.53.168:3000"+".json")
         		//message.method="PUT";
