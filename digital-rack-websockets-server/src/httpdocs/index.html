@@ -3,7 +3,8 @@
 <script src="Scripts/RGraph.line.js"></script>
 <script src="Scripts/RGraph.common.dynamic.js"></script>
 <script src="Scripts/RGraph.common.core.js"></script>
-<script src="Scripts/jquery-1.8.2.min.js"></script>
+<script src="Scripts/jquery.js"></script>
+<script src="Scripts/jquery.min.js"></script>
 <script src="Scripts/RGraph.line.js"></script>
 </head>
 <body>
@@ -16,7 +17,7 @@
     <button type="button" class="btn btn-lg btn-warning col-md-3">Stretch</button>
     <button type="button" class="btn btn-lg btn-info col-md-3">Fold</button>
             </div>
-         <div id="test"></div>   
+    <a href="javascript:doajax();"></a>         <div id="testja"></div> 
 
 </body>
 </html>
@@ -25,7 +26,16 @@
 
 
 
-        $(document).ready(function () {
+
+        $(document).ready(function (){ 
+        
+   var url = 'http://localhost:10001/envData';
+        $.getJSON(url, function (data) {
+          alert(data.Tdata); 
+          alert(data.RHdata);
+        });
+   
+         
             d1 = [];
             l = 0; // The letter 'L' - NOT a one
 

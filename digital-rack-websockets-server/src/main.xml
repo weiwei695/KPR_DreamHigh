@@ -61,6 +61,7 @@
     		
     			message.responseText=JSON.stringify(envData);
     			message.responseCode=200;
+    		message.setResponseHeader("Content-Type", "application/json");
     		]]>
     		</method>
     	</behavior>
