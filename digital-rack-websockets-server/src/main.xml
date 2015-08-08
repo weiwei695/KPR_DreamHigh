@@ -58,10 +58,10 @@
     <handler path="/envData">
     	<behavior>
     		<method id="onInvoke" params="handler,message"><![CDATA[
-    		
+    		    message.status = 200;
     			message.responseText=JSON.stringify(envData);
     			message.responseCode=200;
-    		message.setResponseHeader("Content-Type", "application/json");
+    		    message.setResponseHeader("Content-Type", "application/json");
     		]]>
     		</method>
     	</behavior>
@@ -74,8 +74,12 @@
         <behavior><![CDATA[
         	function onInvoke( handler, message ){
         		var result = message.requestObject;
-        		envData.TData=result.TData;
-        		envData.RHData=result.RHData;
+        		
+        			envData.TData=num;
+        		envData.RHData=num;
+        		num++;
+        	//envData.TData=result.TData;
+        	//	envData.RHData=result.RHData;
         		
         		//var hresult=new Message("107.191.53.168:3000"+".json")
         		//message.method="PUT";
@@ -324,7 +328,7 @@
 		var SendData=0;
 		var modestate=true;
 		var str=0;
-	
+	var num=1;
 		//Initialize bll with starter.
 		application.invoke( new MessageWithObject( "pins:configure", {
             rack: {

@@ -24,16 +24,12 @@
     <!--Humidity-->
     <script>
 
-
+var r1;
 
 
         $(document).ready(function (){ 
         
-   var url = 'http://localhost:10001/envData';
-        $.getJSON(url, function (data) {
-          alert(data.Tdata); 
-          alert(data.RHdata);
-        });
+
    
          
             d1 = [];
@@ -109,6 +105,13 @@
             * This gets called repeatedly to update the chart
             */
             function drawGraph() {
+               var url = '/envData';
+        $.getJSON(url, function (data) {
+              r1=data.TData;    
+          //alert(r1);
+        });
+     
+            
                 // "cache" this in a local variable
                 var RG = RGraph;
 
@@ -150,13 +153,7 @@
 
 
                 // Add some data to the data arrays
-                var r1 = RGraph.random(
-                                       RG.isNull(d1[d1.length - 1]) ? 52 : d1[d1.length - 1] - 2,
-                                       RG.isNull(d1[d1.length - 1]) ? 48 : d1[d1.length - 1] + 2
-                                      );
-                r1 = Math.max(r1, 0);
-                r1 = Math.min(r1, 100);
-
+                
                 d1.push(r1);
 
                 if (d1.length > 600) {
@@ -179,7 +176,10 @@
 
     <!--Temperature-->
     <script>
-        $(document).ready(function () {
+     var r2;
+        $(document).ready(function () {      
+        
+     
             d2 = [];
             l = 0; // The letter 'L' - NOT a one
 
@@ -259,6 +259,11 @@
             * This gets called repeatedly to update the chart
             */
             function drawGraph() {
+               var url = '/envData';
+        $.getJSON(url, function (data) {
+              r2=data.RHData;
+        });
+        
                 // "cache" this in a local variable
                 var RG = RGraph;
 
@@ -299,13 +304,7 @@
 
 
                 // Add some data to the data arrays
-                var r2 = RGraph.random(
-                                       RG.isNull(d2[d2.length - 1]) ? 26 : d2[d2.length - 1] - 2,
-                                       RG.isNull(d2[d2.length - 1]) ? 24 : d2[d2.length - 1] + 2
-                                      );
-                r2 = Math.max(r2, 0);
-                r2 = Math.min(r2, 50);
-
+                
                 d2.push(r2);
 
                 if (d2.length > 600) {

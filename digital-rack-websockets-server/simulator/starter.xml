@@ -55,6 +55,8 @@
 	
 	<function id="TEST"><![CDATA[
 		var RHData_H = 4, TData_H = 8, Rackstate=false;
+		RHData_H++;
+		TData_H++;
 		return{RHData: RHData_H, TData: TData_H, State:Rackstate};			
 	]]></function>
 
