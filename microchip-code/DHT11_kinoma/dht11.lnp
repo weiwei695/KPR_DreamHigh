@@ -1,4 +1,0 @@
-"STARTUP.obj",
-"dht11.obj" 
-TO "dht11" 
-RAMSIZE(256) 
